@@ -11,6 +11,11 @@ const routes = [
         name: "Error404",
         component: () => import("@/pages/Error404.vue"),
     },
+    {
+        path: "/product-list",
+        name: "productList",
+        component: () => import("@/pages/ProductList.vue"),
+    },
 ];
 
 const router = createRouter({
