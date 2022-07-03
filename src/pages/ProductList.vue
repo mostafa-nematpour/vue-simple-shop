@@ -1,26 +1,58 @@
 <template>
-  <div>product-list</div>
+  <div @click="productData.getProductFromServer()">product-list</div>
   <h4 v-if="loading()" class="margin-t-50 margin-b-50">loading data</h4>
   <template v-if="productData.mainData">
+    <div class="d-flex">
+      <ul class="margin-t-50 flex-1 margin-b-50 margin-a w-95 product-list">
+        <li v-for="(product, index) in productData.getProductList" :key="index">
+          <!-- {{ product }} -->
+          <ProductCard :product="product" />
+          <hr />
+        </li>
+      </ul>
+      <aside class="list-side" v-if="!homeData.loading">
+        <!-- 1 -->
+        <template v-for="(item, index) in homeData.getCategories" :key="index">
+          <details v-if="item.children && item.children.length > 0">
+            <summary>
+              <router-link
+                class="f-link"
+                :to="'product-list?category_id=' + item.id"
+                >{{ item.title }}</router-link
+              >
+            </summary>
+            <!-- 2 -->
+            <template v-for="(item1, index) in item.children" :key="index">
+              <details v-if="item1.children && item1.children.length > 0">
+                <summary>{{ item1.title }}</summary>
+                <!-- 3 -->
+                <template v-for="(item2, index) in item1.children" :key="index">
+                  <router-link to="d"> {{ item2.title }} <br /></router-link>
+                </template>
+                <!-- 3 -->
+              </details>
+              <router-link v-else to="d"> {{ item1.title }} <br /></router-link>
+            </template>
+            <!-- 2 -->
+          </details>
+          <router-link v-else to="d"> {{ item.title }} <br /></router-link>
+          <hr />
+        </template>
+        <!-- 1 -->
+      </aside>
+    </div>
     <PaginationView
+      class="margin-t-50 margin-b-50"
       :page-count="productData.getLastPage"
       :initial-page="productData.getCurrentPage ?? 1"
     />
-
-    <ul class="margin-a w-95 product-list">
-      <li v-for="(product, index) in productData.getProductList" :key="index">
-        <!-- {{ product }} -->
-        <ProductCard :product="product" />
-        <hr />
-      </li>
-    </ul>
   </template>
 
-  
   <!-- {{ product.getProductList }} -->
 </template>
 <script>
 import { useProductStore } from "../stores/product";
+import { useHomeStore } from "../stores/home";
 import { useRoute } from "vue-router";
 import { onMounted, ref, watch } from "vue";
 import ProductCard from "@/components/productList/ProductCard.vue";
@@ -31,13 +63,14 @@ export default {
   setup() {
     const route = useRoute();
     const productData = useProductStore();
+    const homeData = useHomeStore();
+
     productData.getProductFromServer();
 
     watch(
-      () => route.query.page,
+      () => productData.filter.page,
       () => {
-        productData.page =route.query.page;
-        productData.getProductFromServer( { page: productData.page });
+        productData.getProductFromServer();
       }
     );
 
@@ -45,7 +78,8 @@ export default {
       return productData.loading;
     }
 
-    return { productData, loading };
+
+    return { productData, loading, homeData };
   },
 };
 </script>
@@ -55,5 +89,23 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 30px;
+}
+
+.list-side {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  direction: rtl;
+  gap: 10px;
+}
+
+.list-side details,
+.list-side a {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
 }
 </style>

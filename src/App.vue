@@ -1,9 +1,17 @@
-<script setup>
-
+<script>
+import { useHomeStore } from "./stores/home";
+export default {
+  setup() {
+    let homeData = useHomeStore();
+    homeData.getHomeFromServer();
+    return { homeData };
+  },
+};
 </script>
 
 <template>
-    <router-view> </router-view>
+  <div class="home-loader" v-if="homeData.loading">loading home data</div>
+  <router-view> </router-view>
 </template>
 
 <style>
@@ -13,6 +21,17 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  position: relative;
+}
+
+.home-loader {
+  padding-top: 60px;
+  background-color: #025db7d2;
+  color: #ffffff;
+  font-weight: bold;
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  z-index: 100;
 }
 </style>
