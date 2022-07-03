@@ -1,36 +1,31 @@
 import { defineStore } from 'pinia';
-import axios from 'axios'
-
+import { product as productApi } from '../api';
 
 export const useProductStore = defineStore(
     {
         id: 'product',
 
         state: () => ({
-            productList: [],
-            mostafa: "dd"
+            product: null,
         }),
         getters: {
             getProductList: (state) => {
                 try {
-                    return state.productList.data.products.data
+                    return state.product.data.products.data
                 } catch (error) {
                     return null;
                 }
             },
-            getMostafa: (state) => {
-                return state.mostafa;
+            getCurrentPage(state) {
+                return state.product.data.products.current_page;
+            },
+            getLastPage(state) {
+                return state.product.data.products.last_page;
             }
-
         },
         actions: {
             async getProductFromServer() {
-                axios
-                    .get('https://api.atlasmode.ir/v1/front/products')
-                    .then((response) => {
-                        this.productList = response.data
-                    })
-
+                this.product = await productApi.get();
             }
         }
     }
