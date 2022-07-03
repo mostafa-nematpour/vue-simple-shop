@@ -1,21 +1,14 @@
 <template>
   <div>product-list</div>
-  <template v-if="loading()">
-    {{ product.getLastPage }}
+  <h4 v-if="loading()" class="margin-t-50 margin-b-50">loading data</h4>
+  <template v-if="productData.mainData">
     <PaginationView
-      :page-count="product.getLastPage"
-      :initial-page="product.getCurrentPage ?? 1"
-      :page-range="3"
-      :margin-pages="1"
-      :click-handler="2"
-      :prev-text="'>'"
-      :next-text="'<'"
-      :container-class="'pagination'"
-      :page-class="'page-item'"
+      :page-count="productData.getLastPage"
+      :initial-page="productData.getCurrentPage ?? 1"
     />
 
     <ul class="margin-a w-95 product-list">
-      <li v-for="(product, index) in product.getProductList" :key="index">
+      <li v-for="(product, index) in productData.getProductList" :key="index">
         <!-- {{ product }} -->
         <ProductCard :product="product" />
         <hr />
@@ -23,26 +16,36 @@
     </ul>
   </template>
 
-  <h4 v-else class="margin-t-50">loading data</h4>
+  
   <!-- {{ product.getProductList }} -->
 </template>
 <script>
 import { useProductStore } from "../stores/product";
+import { useRoute } from "vue-router";
+import { onMounted, ref, watch } from "vue";
 import ProductCard from "@/components/productList/ProductCard.vue";
 import PaginationView from "@/components/shared/PaginationView.vue";
 
 export default {
   components: { ProductCard, PaginationView },
   setup() {
-    const product = useProductStore();
+    const route = useRoute();
+    const productData = useProductStore();
+    productData.getProductFromServer();
 
-    product.getProductFromServer();
+    watch(
+      () => route.query.page,
+      () => {
+        productData.page =route.query.page;
+        productData.getProductFromServer( { page: productData.page });
+      }
+    );
 
     function loading() {
-      return product.getProductList ? true : false;
+      return productData.loading;
     }
 
-    return { product, loading };
+    return { productData, loading };
   },
 };
 </script>

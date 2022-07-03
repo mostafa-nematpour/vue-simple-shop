@@ -1,9 +1,10 @@
 <template>
-  <div>PaginationView {{ initialPage }}</div>
   <div class="d-flex gap-10 flex-w-wrap justify-c-center">
     <span v-for="i in pageCount">
-      {{ i }}
-      <div ></div>
+      <span v-if="i == initialPage" class="active">
+        {{ i }}
+      </span>
+      <router-link v-else :to="'/product-list?page=' + i"> {{ i }}</router-link>
     </span>
   </div>
 </template>
@@ -19,4 +20,8 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+.active {
+  font-weight: bold;
+}
+</style>

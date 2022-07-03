@@ -12,7 +12,7 @@ const routes = [
         component: () => import("@/pages/Error404.vue"),
     },
     {
-        path: "/product-list",
+        path: "/product-list/:page?",
         name: "productList",
         component: () => import("@/pages/ProductList.vue"),
     },
