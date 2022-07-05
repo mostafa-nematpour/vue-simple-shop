@@ -1,5 +1,5 @@
 <template>
-  <div @click="productData.getProductFromServer()">product-list</div>
+  <div @click="productData.getProductFromServer(filter)">product-list</div>
   <h4 v-if="loading()" class="margin-t-50 margin-b-50">loading data</h4>
   <template v-if="productData.mainData">
     <div class="d-flex">
@@ -48,7 +48,6 @@
     />
   </template>
 
-  <!-- {{ product.getProductList }} -->
 </template>
 <script>
 import { useProductStore } from "../stores/product";
@@ -65,21 +64,31 @@ export default {
     const productData = useProductStore();
     const homeData = useHomeStore();
 
-    productData.getProductFromServer();
+    let filter = ref({
+      version: "new",
+      sort: "",
+      title: "",
+      flash_id: "",
+      max_price: "",
+      min_price: "",
+      available: 0,
+      category_id: "",
+      page: 1,
+    });
 
-    watch(
-      () => productData.filter.page,
-      () => {
-        productData.getProductFromServer();
-      }
-    );
+    productData.getProductFromServer(filter.value);
+
+    // watch(
+    //   () => productData.filter.page,
+    //   () => {
+    //     productData.getProductFromServer();
+    //   }
+    // );
 
     function loading() {
       return productData.loading;
     }
-
-
-    return { productData, loading, homeData };
+    return { productData, loading, homeData,filter };
   },
 };
 </script>

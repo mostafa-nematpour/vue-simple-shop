@@ -1,13 +1,12 @@
 import axios from 'axios'
 
-async function get(filter) {
-    let page = filter.page ?? 1
-    let queryString = '';
+async function get(filter={}) {
+    let queryString = '?';
     for (const property in filter) {
         queryString += `${property}=${filter[property]}&`;
     }
 
-    const url = `https://api.atlasmode.ir/v1/front/products?${queryString}`;
+    const url = `https://api.atlasmode.ir/v1/front/products${queryString}`;
 
     let data = null
     await axios
