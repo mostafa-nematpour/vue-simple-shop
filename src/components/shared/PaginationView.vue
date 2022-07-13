@@ -4,13 +4,13 @@
       <span v-if="i == initialPage" class="active">
         {{ i }}
       </span>
-      <span v-else class="c-pointer" @click="setPage(i)"> {{ i }}</span>
+      <span v-else class="c-pointer" @click="$emit('increaseBy', 1)"> {{ i }}</span>
     </span>
   </div>
 </template>
 <script>
 import { useProductStore } from "@/stores/product";
-
+let self;
 export default {
   props: {
     pageCount: {
@@ -20,12 +20,18 @@ export default {
       type: Number,
     },
   },
+  created() {
+    self = this;
+  },
   setup() {
     const productData = useProductStore();
     function setPage(i) {
       productData.filter.page = i;
     }
-    return { setPage };
+    function numberUpdate(i) {
+      self.$emit("page", i);
+    }
+    return { setPage, numberUpdate };
   },
 };
 </script>

@@ -3,13 +3,17 @@
   <h4 v-if="loading()" class="margin-t-50 margin-b-50">loading data</h4>
   <template v-if="productData.mainData">
     <div class="d-flex">
+
+      
       <ul class="margin-t-50 flex-1 margin-b-50 margin-a w-95 product-list">
         <li v-for="(product, index) in productData.getProductList" :key="index">
           <!-- {{ product }} -->
-          <ProductCard :product="product" />
+          <ProductCard :product="product" @increase-by="(n) => console.log(n)" />
           <hr />
         </li>
       </ul>
+
+
       <aside class="list-side" v-if="!homeData.loading">
         <!-- 1 -->
         <template v-for="(item, index) in homeData.getCategories" :key="index">
@@ -45,9 +49,9 @@
       class="margin-t-50 margin-b-50"
       :page-count="productData.getLastPage"
       :initial-page="productData.getCurrentPage ?? 1"
+      v-model="pageNumber"
     />
   </template>
-
 </template>
 <script>
 import { useProductStore } from "../stores/product";
@@ -84,11 +88,13 @@ export default {
     //     productData.getProductFromServer();
     //   }
     // );
-
+    function pageChange(i) {
+      console.log(i);
+    }
     function loading() {
       return productData.loading;
     }
-    return { productData, loading, homeData,filter };
+    return { productData, loading, pageChange, homeData, filter };
   },
 };
 </script>
