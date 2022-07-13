@@ -1,16 +1,15 @@
 <template>
   <div class="d-flex gap-10 flex-w-wrap justify-c-center">
-    <span v-for="i in pageCount">
+    <span v-for="i in pageCount" :key="i">
       <span v-if="i == initialPage" class="active">
         {{ i }}
       </span>
-      <span v-else class="c-pointer" @click="$emit('increaseBy', 1)"> {{ i }}</span>
+      <span v-else class="c-pointer" @click="pageChange(i)"> {{ i }}</span>
     </span>
   </div>
 </template>
 <script>
 import { useProductStore } from "@/stores/product";
-let self;
 export default {
   props: {
     pageCount: {
@@ -20,18 +19,16 @@ export default {
       type: Number,
     },
   },
-  created() {
-    self = this;
-  },
+
   setup() {
     const productData = useProductStore();
-    function setPage(i) {
+
+    function pageChange(i) {
       productData.filter.page = i;
+      productData.getProductFromServer();
     }
-    function numberUpdate(i) {
-      self.$emit("page", i);
-    }
-    return { setPage, numberUpdate };
+
+    return { pageChange };
   },
 };
 </script>

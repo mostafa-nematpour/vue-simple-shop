@@ -11,7 +11,7 @@ export default {
 
 <template>
   <div class="home-loader" v-if="homeData.loading">loading home data</div>
-  <router-view> </router-view>
+  <div style="min-height: 400px;"><router-view> </router-view></div>
 </template>
 
 <style>

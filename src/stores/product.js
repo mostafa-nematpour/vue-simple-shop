@@ -7,7 +7,17 @@ export const useProductStore = defineStore(
 
         state: () => ({
             mainData: null,
-       
+            filter: {
+                version: "new",
+                sort: "",
+                title: "",
+                flash_id: "",
+                max_price: "",
+                min_price: "",
+                available: 0,
+                category_id: "",
+                page: 1,
+            },
             loading: false
         }),
 
@@ -28,9 +38,22 @@ export const useProductStore = defineStore(
         },
 
         actions: {
-            async getProductFromServer(filter) {
+            emptyFilter() {
+                this.filter = {
+                    version: "new",
+                    sort: "",
+                    title: "",
+                    flash_id: "",
+                    max_price: "",
+                    min_price: "",
+                    available: 0,
+                    category_id: "",
+                    page: 1,
+                };
+            },
+            async getProductFromServer() {
                 this.loading = true;
-                this.mainData = await productApi.get(filter);
+                this.mainData = await productApi.get(this.filter);
                 this.loading = false;
             }
         }
