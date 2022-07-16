@@ -38,6 +38,42 @@
       <hr />
     </template>
     <!-- 1 -->
+    <hr />
+    <form class="w-90 margin-a">
+      <div
+        v-for="(item, index) in homeData.getSizeList"
+        :key="index"
+        class="d-inline-block"
+      >
+        <input
+          class="margin-l-10"
+          type="checkbox"
+          :id="'checkbox' + item.id"
+          name="vehicle1"
+          value="Bike"
+        />
+        <label :for="'checkbox' + item.id">{{ item.value }}</label>
+      </div>
+      <hr />
+      <label for="title">عنوان:</label><br />
+      <input
+        type="text"
+        id="title"
+        name="title"
+        style="border: solid #000 1px"
+      /><br />
+      <hr />
+      <input type="checkbox" id="available" name="available" value="HTML" />
+      <label for="available">فقط کالاهای موجود</label><br />
+      <hr />
+
+      <label for="price1">شروع از قیمت:</label><br />
+      <input type="number" id="price1" name="price1" value="0" /><br />
+      <label for="price2">بالاترین قیمت:</label><br />
+      <input type="number" id="price2" name="price2" value="790000" max="790000" /><br />
+      <hr />
+      <button type="submit">اعمال فیلتر</button>
+    </form>
   </aside>
 </template>
 <script>

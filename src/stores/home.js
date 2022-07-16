@@ -14,6 +14,13 @@ export const useHomeStore = defineStore({
             }catch(e){
                 return null;
             }
+        },
+        getSizeList(state){
+            try{
+                return state.mainData.data.response.size_values.values
+            }catch(e){
+                return null;
+            }
         }
     },
     actions: {
